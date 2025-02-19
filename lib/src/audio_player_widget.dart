@@ -39,7 +39,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     _initPlaylist();
   }
 
-
   Future<void> _initPlaylist() async {
     _playlist = ConcatenatingAudioSource(
       children: widget.audioUrls
