@@ -48,27 +48,32 @@ Para começar a usar o `AudioPlayerWidget`, basta passar uma lista de URLs de á
 
 ```dart
 import 'package:flutter/material.dart';
-import 'audio_player_widget.dart'; // Importe o widget do player de áudio
+import 'package:flutter_audio_player_library/flutter_audio_player_library.dart';
 
-class MyAudioApp extends StatelessWidget {
-  final List<String> audioUrls = [
-    'https://example.com/audio1.mp3',
-    'https://example.com/audio2.mp3',
-    'https://example.com/audio3.mp3',
-  ];
+class MyCustomAudioPlayer extends StatelessWidget {
+  const MyCustomAudioPlayer({
+    super.key,
+    this.width,
+    this.height,
+    required this.musicUrls,
+  });
+
+  final double? width;
+  final double? height;
+  final List<String> musicUrls;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Audio Player Example')),
-        body: Center(
-          child: AudioPlayerWidget(audioUrls: audioUrls),
-        ),
+    return SizedBox(
+      width: width,
+      height: height,
+      child: AudioPlayerWidget(
+        audioUrls: musicUrls,
       ),
     );
   }
 }
+
 ```
 
 ---
@@ -176,6 +181,15 @@ Contribuições são bem-vindas! Se você deseja contribuir para este projeto, s
 3. Commit suas mudanças (`git commit -m 'Adicionando nova feature'`).
 4. Push para a branch (`git push origin feature/nova-feature`).
 5. Abra um Pull Request.
+
+---
+
+## Créditos
+
+Principal autor: Ildo Petri Junior
+
+Se você tiver algum feedback ou sugestão, fico a sua disposição para você me contatar diretamente.
+Agradeço ao time da Agência BOZ por todo o suporte durante o desenvolvimento desta biblioteca.
 
 ---
 

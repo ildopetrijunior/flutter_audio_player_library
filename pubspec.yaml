@@ -2,7 +2,7 @@ name: flutter_audio_player_library
 description: >
   Biblioteca Flutter para reprodução de áudio com playlist, controles de reprodução,
   seek e navegação entre faixas.
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/ildopetrijunior/flutter_audio_player_library
 repository: https://github.com/ildopetrijunior/flutter_audio_player_library
 
