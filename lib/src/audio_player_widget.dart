@@ -18,11 +18,11 @@ class AudioPlayerWidget extends StatefulWidget {
   final AudioPlayer? audioPlayer; // Injeção opcional
 
   const AudioPlayerWidget({
-    Key? key,
+    super.key,
     required this.audioUrls,
     this.seekInterval = const Duration(seconds: 10),
     this.audioPlayer,
-  }) : super(key: key);
+  });
 
   @override
   State<AudioPlayerWidget> createState() => _AudioPlayerWidgetState();

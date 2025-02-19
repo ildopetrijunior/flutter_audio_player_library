@@ -1,3 +1,3 @@
-library flutter_audio_player_library;
+library;
 
 export 'src/audio_player_widget.dart';
