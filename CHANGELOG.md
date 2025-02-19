@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.1] - 2025-02-19
+## [1.0.2] - 2025-02-19
 
 ### Adicionado
 - Versão inicial da biblioteca `flutter_audio_player_library`.
