@@ -6,7 +6,9 @@ import 'package:just_audio/just_audio.dart';
 
 /// Fake que simula o AudioPlayer do just_audio.
 class FakeAudioPlayer extends Fake implements AudioPlayer {
+  @override
   Duration position = Duration.zero;
+  @override
   int currentIndex = 0;
   bool _playing = false;
 
