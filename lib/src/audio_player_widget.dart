@@ -13,16 +13,15 @@ class PositionData {
 
 /// Widget avançado de áudio com playlist, controles de navegação e seek.
 class AudioPlayerWidget extends StatefulWidget {
-  /// Lista de URLs das músicas.
   final List<String> audioUrls;
-
-  /// Intervalo para avançar ou retroceder, padrão 10 segundos.
   final Duration seekInterval;
+  final AudioPlayer? audioPlayer; // Injeção opcional
 
   const AudioPlayerWidget({
     Key? key,
     required this.audioUrls,
     this.seekInterval = const Duration(seconds: 10),
+    this.audioPlayer,
   }) : super(key: key);
 
   @override
@@ -36,9 +35,10 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
+    _audioPlayer = widget.audioPlayer ?? AudioPlayer();
     _initPlaylist();
   }
+
 
   Future<void> _initPlaylist() async {
     _playlist = ConcatenatingAudioSource(
@@ -50,9 +50,9 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     try {
       await _audioPlayer.setAudioSource(_playlist);
       // Inicia a reprodução automaticamente se houver mais de uma música
-      if (widget.audioUrls.isNotEmpty) {
-        _audioPlayer.play();
-      }
+      // if (widget.audioUrls.isNotEmpty) {
+      //   _audioPlayer.play();
+      // }
     } catch (e) {
       print("Erro ao carregar a fonte de áudio: $e");
     }
