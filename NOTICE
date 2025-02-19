@@ -1,0 +1,6 @@
+Este projeto utiliza as seguintes bibliotecas de terceiros:
+
+- just_audio: Licença MIT (https://pub.dev/packages/just_audio)
+- rxdart: Licença Apache 2.0 (https://pub.dev/packages/rxdart)
+
+Para mais detalhes sobre as licenças, consulte os repositórios oficiais das bibliotecas.
