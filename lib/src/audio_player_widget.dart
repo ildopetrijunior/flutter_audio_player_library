@@ -15,13 +15,29 @@ class PositionData {
 class AudioPlayerWidget extends StatefulWidget {
   final List<String> audioUrls;
   final Duration seekInterval;
-  final AudioPlayer? audioPlayer; // Injeção opcional
+  final AudioPlayer? audioPlayer;
+  final Widget playIcon;
+  final Widget pauseIcon;
+  final Widget nextIcon;
+  final Widget previousIcon;
+  final Color playIconColor;
+  final Color pauseIconColor;
+  final Color nextIconColor;
+  final Color previousIconColor;
 
   const AudioPlayerWidget({
     super.key,
     required this.audioUrls,
     this.seekInterval = const Duration(seconds: 10),
     this.audioPlayer,
+    this.playIcon = const Icon(Icons.play_arrow),
+    this.pauseIcon = const Icon(Icons.pause),
+    this.nextIcon = const Icon(Icons.skip_next),
+    this.previousIcon = const Icon(Icons.skip_previous),
+    this.playIconColor = Colors.black,
+    this.pauseIconColor = Colors.black,
+    this.nextIconColor = Colors.black,
+    this.previousIconColor = Colors.black,
   });
 
   @override

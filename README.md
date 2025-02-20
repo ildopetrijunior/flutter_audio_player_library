@@ -84,40 +84,60 @@ Aqui está um exemplo completo de como usar o `AudioPlayerWidget` em um aplicati
 
 ```dart
 import 'package:flutter/material.dart';
-import 'audio_player_widget.dart'; // Importe o widget do player de áudio
+import 'package:flutter_audio_player_library/flutter_audio_player_library.dart'; // Importe sua biblioteca
 
-void main() {
-  runApp(MyApp());
-}
+class MyCustomAudioPlayer extends StatelessWidget {
+  const MyCustomAudioPlayer({
+    Key? key,
+    this.width,
+    this.height,
+    required this.musicUrls,
+    this.playIcon = const Icon(Icons.play_arrow),
+    this.pauseIcon = const Icon(Icons.pause),
+    this.nextIcon = const Icon(Icons.skip_next),
+    this.previousIcon = const Icon(Icons.skip_previous),
+    this.playIconColor = Colors.black,
+    this.pauseIconColor = Colors.black,
+    this.nextIconColor = Colors.black,
+    this.previousIconColor = Colors.black,
+    this.sliderActiveColor = Colors.blue,
+    this.sliderInactiveColor = Colors.grey,
+    this.playbackDurationTextColor = Colors.black,
+  }) : super(key: key);
 
-class MyApp extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final List<String> musicUrls;
+  final Widget playIcon;
+  final Widget pauseIcon;
+  final Widget nextIcon;
+  final Widget previousIcon;
+  final Color playIconColor;
+  final Color pauseIconColor;
+  final Color nextIconColor;
+  final Color previousIconColor;
+  final Color sliderActiveColor;
+  final Color sliderInactiveColor;
+  final Color playbackDurationTextColor;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Audio Player',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: AudioPlayerExample(),
-    );
-  }
-}
-
-class AudioPlayerExample extends StatelessWidget {
-  final List<String> audioUrls = [
-    'https://example.com/audio1.mp3',
-    'https://example.com/audio2.mp3',
-    'https://example.com/audio3.mp3',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter Audio Player'),
-      ),
-      body: Center(
-        child: AudioPlayerWidget(audioUrls: audioUrls),
+    return Container(
+      width: width,
+      height: height,
+      child: AudioPlayerWidget(
+        audioUrls: musicUrls,
+        playIcon: playIcon,
+        pauseIcon: pauseIcon,
+        nextIcon: nextIcon,
+        previousIcon: previousIcon,
+        playIconColor: playIconColor,
+        pauseIconColor: pauseIconColor,
+        nextIconColor: nextIconColor,
+        previousIconColor: previousIconColor,
+        sliderActiveColor: sliderActiveColor,
+        sliderInactiveColor: sliderInactiveColor,
+        playbackDurationTextColor: playbackDurationTextColor,
       ),
     );
   }

@@ -1,9 +1,10 @@
 # Changelog
 
-## [1.0.4] - 2025-02-19
+## [1.0.5] - 2025-02-20
 
 ### Adicionado
-- Aprimorando o exemplo do código para ser utilizado na plataforma flutter flow.
+- Adicionando um exemplo completo e funcional ao README.md
+- Adicionando estilização aos botões.
 
 ### Dependências
 - Nenhuma dependência nesta versão.
