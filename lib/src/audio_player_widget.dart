@@ -24,6 +24,7 @@ class AudioPlayerWidget extends StatefulWidget {
   final Widget forwardIcon;
   final Color sliderActiveColor;
   final Color sliderInactiveColor;
+  final Function(String)? onCurrentSongChanged;
 
   const AudioPlayerWidget({
     super.key,
@@ -38,6 +39,7 @@ class AudioPlayerWidget extends StatefulWidget {
     this.forwardIcon = const Icon(Icons.forward_10),
     this.sliderActiveColor = Colors.blue,
     this.sliderInactiveColor = Colors.grey,
+    this.onCurrentSongChanged,
   });
 
   @override
@@ -47,6 +49,7 @@ class AudioPlayerWidget extends StatefulWidget {
 class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   late AudioPlayer _audioPlayer;
   late ConcatenatingAudioSource _playlist;
+  int _currentSongIndex = 0;
 
   @override
   void initState() {
@@ -64,8 +67,15 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
     try {
       await _audioPlayer.setAudioSource(_playlist);
+      _notifyCurrentSong(); // Notificar a música atual após carregar a playlist
     } catch (e) {
       print("Erro ao carregar a fonte de áudio: $e");
+    }
+  }
+
+  void _notifyCurrentSong() {
+    if (widget.onCurrentSongChanged != null) {
+      widget.onCurrentSongChanged!(widget.audioUrls[_currentSongIndex]);
     }
   }
 
@@ -101,6 +111,10 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   Future<void> _skipToNext() async {
     try {
       await _audioPlayer.seekToNext();
+      setState(() {
+        _currentSongIndex = (_currentSongIndex + 1) % widget.audioUrls.length;
+      });
+      _notifyCurrentSong();
     } catch (e) {
       print("Não há próxima faixa disponível");
     }
@@ -110,6 +124,10 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   Future<void> _skipToPrevious() async {
     try {
       await _audioPlayer.seekToPrevious();
+      setState(() {
+        _currentSongIndex = (_currentSongIndex - 1) % widget.audioUrls.length;
+      });
+      _notifyCurrentSong();
     } catch (e) {
       print("Não há faixa anterior disponível");
     }
