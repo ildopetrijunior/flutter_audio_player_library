@@ -1,15 +1,15 @@
 # Changelog
 
-## [1.0.7] - 2025-02-20
+## [1.0.8] - 2025-02-20
 
 ### Adicionado
-- Mais opções de estilização.
+- Adicionando um Output que retorna qual música está tocando.
 
 ### Dependências
 - Nenhuma dependência nesta versão.
 
 ### Corrigido
-- Corrigindo os exemplos de uso da biblioteca.
+- Nenhuma correça nesta versão
 
 ### Alterado
 - Nenhuma alteração nesta versão.
