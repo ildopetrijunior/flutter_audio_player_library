@@ -14,36 +14,30 @@ class PositionData {
 /// Widget avançado de áudio com playlist, controles de navegação e seek.
 class AudioPlayerWidget extends StatefulWidget {
   final List<String> audioUrls;
-  final Duration seekInterval;
   final AudioPlayer? audioPlayer;
+  final Duration seekInterval;
   final Widget playIcon;
   final Widget pauseIcon;
-  final Widget nextIcon;
   final Widget previousIcon;
-//   final Color playIconColor;
-//   final Color pauseIconColor;
-//   final Color nextIconColor;
-//   final Color previousIconColor;
-//   test
-//   final Color sliderActiveColor;
-//   final Color sliderInactiveColor;
+  final Widget nextIcon;
+  final Widget replayIcon;
+  final Widget forwardIcon;
+  final Color sliderActiveColor;
+  final Color sliderInactiveColor;
 
   const AudioPlayerWidget({
     super.key,
     required this.audioUrls,
-    this.seekInterval = const Duration(seconds: 10),
     this.audioPlayer,
+    this.seekInterval = const Duration(seconds: 10),
     this.playIcon = const Icon(Icons.play_arrow),
     this.pauseIcon = const Icon(Icons.pause),
     this.nextIcon = const Icon(Icons.skip_next),
     this.previousIcon = const Icon(Icons.skip_previous),
-    // this.playIconColor = Colors.black,
-    // this.pauseIconColor = Colors.black,
-    // this.nextIconColor = Colors.black,
-    // this.previousIconColor = Colors.black,
-    // test
-    // this.sliderActiveColor = Colors.blue,
-    // this.sliderInactiveColor = Colors.grey,
+    this.replayIcon = const Icon(Icons.replay_10),
+    this.forwardIcon = const Icon(Icons.forward_10),
+    this.sliderActiveColor = Colors.blue,
+    this.sliderInactiveColor = Colors.grey,
   });
 
   @override
@@ -156,8 +150,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               onChanged: (value) {
                 _audioPlayer.seek(Duration(milliseconds: value.toInt()));
               },
-              //   activeColor: widget.sliderActiveColor,
-              //   inactiveColor: widget.sliderInactiveColor,
+              activeColor: widget.sliderActiveColor,
+              inactiveColor: widget.sliderInactiveColor,
             );
           },
         ),
@@ -167,11 +161,10 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           children: [
             IconButton(
               icon: widget.previousIcon,
-              //   color: widget.previousIconColor,
               onPressed: _skipToPrevious,
             ),
             IconButton(
-              icon: const Icon(Icons.replay_10),
+              icon: widget.replayIcon,
               onPressed: _seekBackward,
             ),
             StreamBuilder<bool>(
@@ -180,18 +173,16 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                 final isPlaying = snapshot.data ?? false;
                 return IconButton(
                   icon: isPlaying ? widget.pauseIcon : widget.playIcon,
-                  //   color: isPlaying ? widget.pauseIconColor : widget.playIconColor,
                   onPressed: _playPause,
                 );
               },
             ),
             IconButton(
-              icon: const Icon(Icons.forward_10),
+              icon: widget.forwardIcon,
               onPressed: _seekForward,
             ),
             IconButton(
               icon: widget.nextIcon,
-              //   color: widget.nextIconColor,
               onPressed: _skipToNext,
             ),
           ],
