@@ -88,22 +88,20 @@ import 'package:flutter_audio_player_library/flutter_audio_player_library.dart';
 
 class MyCustomAudioPlayer extends StatelessWidget {
   const MyCustomAudioPlayer({
-    Key? key,
+    super.key,
     this.width,
     this.height,
     required this.musicUrls,
-    this.playIcon = const Icon(Icons.play_arrow),
-    this.pauseIcon = const Icon(Icons.pause),
-    this.nextIcon = const Icon(Icons.skip_next),
-    this.previousIcon = const Icon(Icons.skip_previous),
-    this.playIconColor = Colors.black,
-    this.pauseIconColor = Colors.black,
-    this.nextIconColor = Colors.black,
-    this.previousIconColor = Colors.black,
-    this.sliderActiveColor = Colors.blue,
-    this.sliderInactiveColor = Colors.grey,
-    this.playbackDurationTextColor = Colors.black,
-  }) : super(key: key);
+    this.seekInterval,
+    this.playIcon,
+    this.pauseIcon,
+    this.nextIcon,
+    this.previousIcon,
+    this.replayIcon,
+    this.forwardIcon,
+    this.sliderActiveColor,
+    this.sliderInactiveColor,
+  });
 
   final double? width;
   final double? height;
@@ -112,32 +110,27 @@ class MyCustomAudioPlayer extends StatelessWidget {
   final Widget pauseIcon;
   final Widget nextIcon;
   final Widget previousIcon;
-  final Color playIconColor;
-  final Color pauseIconColor;
-  final Color nextIconColor;
-  final Color previousIconColor;
+  final Widget replayIcon;
+  final Widget forwardIcon;
   final Color sliderActiveColor;
   final Color sliderInactiveColor;
-  final Color playbackDurationTextColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
       height: height,
       child: AudioPlayerWidget(
         audioUrls: musicUrls,
-        playIcon: playIcon,
-        pauseIcon: pauseIcon,
-        nextIcon: nextIcon,
-        previousIcon: previousIcon,
-        playIconColor: playIconColor,
-        pauseIconColor: pauseIconColor,
-        nextIconColor: nextIconColor,
-        previousIconColor: previousIconColor,
-        sliderActiveColor: sliderActiveColor,
-        sliderInactiveColor: sliderInactiveColor,
-        playbackDurationTextColor: playbackDurationTextColor,
+        seekInterval: seekInterval ?? const Duration(seconds: 10),
+        playIcon: playIconn ?? const Icon(Icons.play_arrow),
+        pauseIcon: pauseIconn ?? const Icon(Icons.pause),
+        nextIcon: nextIconn ?? const Icon(Icons.skip_next),
+        previousIcon: previousIconn ?? const Icon(Icons.skip_previous),
+        replayIcon: replayIcon ?? const Icon(Icons.replay_10),
+        forwardIcon: forwardIcon ??  const Icon(Icons.forward_10),
+        sliderActiveColor: sliderActiveColor ??  Colors.blue,
+        sliderInactiveColor: sliderInactiveColor ??  = Colors.grey,
       ),
     );
   }
