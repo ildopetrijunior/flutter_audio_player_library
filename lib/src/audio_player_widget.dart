@@ -20,10 +20,13 @@ class AudioPlayerWidget extends StatefulWidget {
   final Widget pauseIcon;
   final Widget nextIcon;
   final Widget previousIcon;
-  final Color playIconColor;
-  final Color pauseIconColor;
-  final Color nextIconColor;
-  final Color previousIconColor;
+//   final Color playIconColor;
+//   final Color pauseIconColor;
+//   final Color nextIconColor;
+//   final Color previousIconColor;
+//   test
+//   final Color sliderActiveColor;
+//   final Color sliderInactiveColor;
 
   const AudioPlayerWidget({
     super.key,
@@ -34,10 +37,13 @@ class AudioPlayerWidget extends StatefulWidget {
     this.pauseIcon = const Icon(Icons.pause),
     this.nextIcon = const Icon(Icons.skip_next),
     this.previousIcon = const Icon(Icons.skip_previous),
-    this.playIconColor = Colors.black,
-    this.pauseIconColor = Colors.black,
-    this.nextIconColor = Colors.black,
-    this.previousIconColor = Colors.black,
+    // this.playIconColor = Colors.black,
+    // this.pauseIconColor = Colors.black,
+    // this.nextIconColor = Colors.black,
+    // this.previousIconColor = Colors.black,
+    // test
+    // this.sliderActiveColor = Colors.blue,
+    // this.sliderInactiveColor = Colors.grey,
   });
 
   @override
@@ -64,10 +70,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
     try {
       await _audioPlayer.setAudioSource(_playlist);
-      // Inicia a reprodução automaticamente se houver mais de uma música
-      // if (widget.audioUrls.isNotEmpty) {
-      //   _audioPlayer.play();
-      // }
     } catch (e) {
       print("Erro ao carregar a fonte de áudio: $e");
     }
@@ -154,6 +156,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               onChanged: (value) {
                 _audioPlayer.seek(Duration(milliseconds: value.toInt()));
               },
+              //   activeColor: widget.sliderActiveColor,
+              //   inactiveColor: widget.sliderInactiveColor,
             );
           },
         ),
@@ -162,7 +166,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const Icon(Icons.skip_previous),
+              icon: widget.previousIcon,
+              //   color: widget.previousIconColor,
               onPressed: _skipToPrevious,
             ),
             IconButton(
@@ -174,7 +179,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               builder: (context, snapshot) {
                 final isPlaying = snapshot.data ?? false;
                 return IconButton(
-                  icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                  icon: isPlaying ? widget.pauseIcon : widget.playIcon,
+                  //   color: isPlaying ? widget.pauseIconColor : widget.playIconColor,
                   onPressed: _playPause,
                 );
               },
@@ -184,7 +190,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               onPressed: _seekForward,
             ),
             IconButton(
-              icon: const Icon(Icons.skip_next),
+              icon: widget.nextIcon,
+              //   color: widget.nextIconColor,
               onPressed: _skipToNext,
             ),
           ],

@@ -1,16 +1,15 @@
 # Changelog
 
-## [1.0.5] - 2025-02-20
+## [1.0.6] - 2025-02-20
 
 ### Adicionado
-- Adicionando um exemplo completo e funcional ao README.md
-- Adicionando estilização aos botões.
+- Nenhuma adição nesta versão.
 
 ### Dependências
 - Nenhuma dependência nesta versão.
 
 ### Corrigido
-- Nenhuma correção nesta versão.
+- Corrigindo os parâmetros de estilização.
 
 ### Alterado
 - Nenhuma alteração nesta versão.
