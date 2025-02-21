@@ -1,15 +1,15 @@
 # Changelog
 
-## [1.0.8] - 2025-02-20
+## [1.0.9] - 2025-02-20
 
 ### Adicionado
-- Adicionando um Output que retorna qual música está tocando.
+- Adicionando um Output que retorna se alguma musica está tocando ou não.
 
 ### Dependências
 - Nenhuma dependência nesta versão.
 
 ### Corrigido
-- Nenhuma correça nesta versão
+- Output que retorna qual musica está tocando.
 
 ### Alterado
 - Nenhuma alteração nesta versão.
