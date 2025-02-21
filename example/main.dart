@@ -7,6 +7,9 @@ class MyCustomAudioPlayer extends StatelessWidget {
     this.width,
     this.height,
     required this.musicUrls,
+    this.onCurrentSongChanged,
+    this.onPlayingStateChanged,
+    this.isReduced,
     this.seekInterval,
     this.playIcon,
     this.pauseIcon,
@@ -16,12 +19,14 @@ class MyCustomAudioPlayer extends StatelessWidget {
     this.forwardIcon,
     this.sliderActiveColor,
     this.sliderInactiveColor,
-    this.onCurrentSongChanged,
   });
 
   final double? width;
   final double? height;
   final List<String> musicUrls;
+  final Function(String)? onCurrentSongChanged;
+  final Function(bool)? onPlayingStateChanged;
+  final bool? isReduced;
   final Duration? seekInterval;
   final Widget? playIcon;
   final Widget? pauseIcon;
@@ -31,7 +36,6 @@ class MyCustomAudioPlayer extends StatelessWidget {
   final Widget? forwardIcon;
   final Color? sliderActiveColor;
   final Color? sliderInactiveColor;
-  final Function(String)? onCurrentSongChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +44,9 @@ class MyCustomAudioPlayer extends StatelessWidget {
       height: height,
       child: AudioPlayerWidget(
         audioUrls: musicUrls,
+        onCurrentSongChanged: onCurrentSongChanged,
+        onPlayingStateChanged: onPlayingStateChanged,
+        isReduced: isReduced ?? false,
         seekInterval: seekInterval ?? const Duration(seconds: 10),
         playIcon: playIcon ?? const Icon(Icons.play_arrow),
         pauseIcon: pauseIcon ?? const Icon(Icons.pause),
@@ -49,7 +56,6 @@ class MyCustomAudioPlayer extends StatelessWidget {
         forwardIcon: forwardIcon ?? const Icon(Icons.forward_10),
         sliderActiveColor: sliderActiveColor ?? Colors.blue,
         sliderInactiveColor: sliderInactiveColor ?? Colors.grey,
-        onCurrentSongChanged: onCurrentSongChanged,
       ),
     );
   }

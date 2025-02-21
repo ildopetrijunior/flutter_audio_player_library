@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart'; // Para combinar streams
+import 'package:rxdart/rxdart.dart';
 
-/// Dados combinados para atualizar a barra de progresso
 class PositionData {
   final Duration position;
   final Duration bufferedPosition;
   final Duration duration;
-
   PositionData(this.position, this.bufferedPosition, this.duration);
 }
 
-/// Widget avançado de áudio com playlist, controles de navegação e seek.
 class AudioPlayerWidget extends StatefulWidget {
   final List<String> audioUrls;
   final AudioPlayer? audioPlayer;
+  final Function(String)? onCurrentSongChanged;
+  final Function(bool)? onPlayingStateChanged;
+  final bool isReduced;
   final Duration seekInterval;
   final Widget playIcon;
   final Widget pauseIcon;
@@ -24,12 +24,14 @@ class AudioPlayerWidget extends StatefulWidget {
   final Widget forwardIcon;
   final Color sliderActiveColor;
   final Color sliderInactiveColor;
-  final Function(String)? onCurrentSongChanged;
 
   const AudioPlayerWidget({
     super.key,
     required this.audioUrls,
     this.audioPlayer,
+    this.onCurrentSongChanged,
+    this.onPlayingStateChanged,
+    this.isReduced = false,
     this.seekInterval = const Duration(seconds: 10),
     this.playIcon = const Icon(Icons.play_arrow),
     this.pauseIcon = const Icon(Icons.pause),
@@ -39,7 +41,6 @@ class AudioPlayerWidget extends StatefulWidget {
     this.forwardIcon = const Icon(Icons.forward_10),
     this.sliderActiveColor = Colors.blue,
     this.sliderInactiveColor = Colors.grey,
-    this.onCurrentSongChanged,
   });
 
   @override
@@ -67,7 +68,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
     try {
       await _audioPlayer.setAudioSource(_playlist);
-      _notifyCurrentSong(); // Notificar a música atual após carregar a playlist
+      _notifyCurrentSong();
+      _notifyPlayingState();
     } catch (e) {
       print("Erro ao carregar a fonte de áudio: $e");
     }
@@ -79,13 +81,18 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     }
   }
 
+  void _notifyPlayingState() {
+    if (widget.onPlayingStateChanged != null) {
+      widget.onPlayingStateChanged!(_audioPlayer.playing);
+    }
+  }
+
   @override
   void dispose() {
     _audioPlayer.dispose();
     super.dispose();
   }
 
-  // Combina streams de posição, posição bufferizada e duração
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         _audioPlayer.positionStream,
@@ -98,16 +105,15 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         ),
       );
 
-  // Alterna reprodução/pausa
   Future<void> _playPause() async {
     if (_audioPlayer.playing) {
       await _audioPlayer.pause();
     } else {
       await _audioPlayer.play();
     }
+    _notifyPlayingState(); // Notificar o estado de reprodução após alternar
   }
 
-  // Avança para a próxima faixa
   Future<void> _skipToNext() async {
     try {
       await _audioPlayer.seekToNext();
@@ -115,12 +121,12 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         _currentSongIndex = (_currentSongIndex + 1) % widget.audioUrls.length;
       });
       _notifyCurrentSong();
+      _notifyPlayingState();
     } catch (e) {
       print("Não há próxima faixa disponível");
     }
   }
 
-  // Retrocede para a faixa anterior
   Future<void> _skipToPrevious() async {
     try {
       await _audioPlayer.seekToPrevious();
@@ -128,18 +134,17 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         _currentSongIndex = (_currentSongIndex - 1) % widget.audioUrls.length;
       });
       _notifyCurrentSong();
+      _notifyPlayingState();
     } catch (e) {
       print("Não há faixa anterior disponível");
     }
   }
 
-  // Avança o tempo da faixa
   void _seekForward() {
     final newPosition = _audioPlayer.position + widget.seekInterval;
     _audioPlayer.seek(newPosition);
   }
 
-  // Retrocede o tempo da faixa
   void _seekBackward() {
     final newPosition = _audioPlayer.position - widget.seekInterval;
     _audioPlayer
@@ -148,64 +153,102 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Barra de progresso com slider
-        StreamBuilder<PositionData>(
-          stream: _positionDataStream,
-          builder: (context, snapshot) {
-            final positionData = snapshot.data;
-            final duration = positionData?.duration ?? Duration.zero;
-            final position = positionData?.position ?? Duration.zero;
+    return widget.isReduced
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: StreamBuilder<PositionData>(
+                  stream: _positionDataStream,
+                  builder: (context, snapshot) {
+                    final positionData = snapshot.data;
+                    final duration = positionData?.duration ?? Duration.zero;
+                    final position = positionData?.position ?? Duration.zero;
 
-            return Slider(
-              min: 0.0,
-              max: duration.inMilliseconds.toDouble(),
-              value: position.inMilliseconds
-                  .clamp(0, duration.inMilliseconds)
-                  .toDouble(),
-              onChanged: (value) {
-                _audioPlayer.seek(Duration(milliseconds: value.toInt()));
-              },
-              activeColor: widget.sliderActiveColor,
-              inactiveColor: widget.sliderInactiveColor,
-            );
-          },
-        ),
-        // Linha de botões de controle
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: widget.previousIcon,
-              onPressed: _skipToPrevious,
-            ),
-            IconButton(
-              icon: widget.replayIcon,
-              onPressed: _seekBackward,
-            ),
-            StreamBuilder<bool>(
-              stream: _audioPlayer.playingStream,
-              builder: (context, snapshot) {
-                final isPlaying = snapshot.data ?? false;
-                return IconButton(
-                  icon: isPlaying ? widget.pauseIcon : widget.playIcon,
-                  onPressed: _playPause,
-                );
-              },
-            ),
-            IconButton(
-              icon: widget.forwardIcon,
-              onPressed: _seekForward,
-            ),
-            IconButton(
-              icon: widget.nextIcon,
-              onPressed: _skipToNext,
-            ),
-          ],
-        ),
-      ],
-    );
+                    return Slider(
+                      min: 0.0,
+                      max: duration.inMilliseconds.toDouble(),
+                      value: position.inMilliseconds
+                          .clamp(0, duration.inMilliseconds)
+                          .toDouble(),
+                      onChanged: (value) {
+                        _audioPlayer
+                            .seek(Duration(milliseconds: value.toInt()));
+                      },
+                      activeColor: widget.sliderActiveColor,
+                      inactiveColor: widget.sliderInactiveColor,
+                    );
+                  },
+                ),
+              ),
+              StreamBuilder<bool>(
+                stream: _audioPlayer.playingStream,
+                builder: (context, snapshot) {
+                  final isPlaying = snapshot.data ?? false;
+                  return IconButton(
+                    icon: isPlaying ? widget.pauseIcon : widget.playIcon,
+                    onPressed: _playPause,
+                  );
+                },
+              ),
+            ],
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              StreamBuilder<PositionData>(
+                stream: _positionDataStream,
+                builder: (context, snapshot) {
+                  final positionData = snapshot.data;
+                  final duration = positionData?.duration ?? Duration.zero;
+                  final position = positionData?.position ?? Duration.zero;
+
+                  return Slider(
+                    min: 0.0,
+                    max: duration.inMilliseconds.toDouble(),
+                    value: position.inMilliseconds
+                        .clamp(0, duration.inMilliseconds)
+                        .toDouble(),
+                    onChanged: (value) {
+                      _audioPlayer.seek(Duration(milliseconds: value.toInt()));
+                    },
+                    activeColor: widget.sliderActiveColor,
+                    inactiveColor: widget.sliderInactiveColor,
+                  );
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: widget.previousIcon,
+                    onPressed: _skipToPrevious,
+                  ),
+                  IconButton(
+                    icon: widget.replayIcon,
+                    onPressed: _seekBackward,
+                  ),
+                  StreamBuilder<bool>(
+                    stream: _audioPlayer.playingStream,
+                    builder: (context, snapshot) {
+                      final isPlaying = snapshot.data ?? false;
+                      return IconButton(
+                        icon: isPlaying ? widget.pauseIcon : widget.playIcon,
+                        onPressed: _playPause,
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: widget.forwardIcon,
+                    onPressed: _seekForward,
+                  ),
+                  IconButton(
+                    icon: widget.nextIcon,
+                    onPressed: _skipToNext,
+                  ),
+                ],
+              ),
+            ],
+          );
   }
 }
